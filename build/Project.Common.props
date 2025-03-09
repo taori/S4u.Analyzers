@@ -27,7 +27,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(IsPackable)' == 'True'">
-		<None Include="..\..\..\README.md" Pack="True" PackagePath="\Resources"/>
-		<None Include="..\..\packageIcon.png" Pack="True" PackagePath="\Resources"/>
+		<None Include="..\..\README.md" Pack="True" PackagePath="\Resources"/>
+		<None Include="..\packageIcon.png" Pack="True" PackagePath="\Resources"/>
 	</ItemGroup>
 </Project>
