@@ -161,7 +161,7 @@ jobs:
       versionPrefix: ${{ needs.parameters.outputs.versionPrefix }}
       package: ${{ needs.parameters.outputs.package == 'true' }}
       publish: ${{ needs.parameters.outputs.publish == 'true' }}
-      publishSymbols: ${{ needs.parameters.outputs.publishSymbols == 'true' }}
+      publishSymbols: false
       removePrereleases: ${{ needs.parameters.outputs.removePrereleases == 'true' }}
       skipTests: ${{ needs.parameters.outputs.runTests == 'false' }}
       configuration: ${{ needs.parameters.outputs.configuration }}
