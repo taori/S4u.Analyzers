@@ -18,7 +18,7 @@
 		<RepositoryUrl>https://github.com/taori/S4u.Analyzers.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/taori/S4u.Analyzers</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<NoWarn>MSB3243;NU1801</NoWarn>
+		<NoWarn>MSB3243;NU1801;CS1591</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup>

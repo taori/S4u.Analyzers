@@ -23,4 +23,6 @@
 		<ProjectReference Include="..\..\src\S4u.Analyzers\S4u.Analyzers\S4u.Analyzers.csproj" />
 	</ItemGroup>
 
+	<Import Project="..\..\build\Tests.Common.props"/>
+
 </Project>
