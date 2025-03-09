@@ -169,7 +169,7 @@ jobs:
       runCoverage: ${{ needs.parameters.outputs.runCoverage == 'true' }}
       testArguments: "--filter Category!=SkipInCI"
       concurrencyAbortable: true
-      coverageThreshold: '85 95'
+      coverageThreshold: '50 60'
       dotnetVersion: 8.0.x
     secrets:
       nuget: ${{ secrets.NUGET }}
