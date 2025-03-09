@@ -156,7 +156,7 @@ jobs:
     uses: taori/actions/.github/workflows/nupkg.yml@v9
     with:
       solutionPath: src/S4u.Analyzers.sln
-      packProjects: src/S4u.Analyzers/S4u.Analyzers/S4u.Analyzers.csproj
+      packProjects: src/S4u.Analyzers/S4u.Analyzers.csproj
       versionSuffix: ${{ needs.parameters.outputs.versionSuffix }}
       versionPrefix: ${{ needs.parameters.outputs.versionPrefix }}
       package: ${{ needs.parameters.outputs.package == 'true' }}
