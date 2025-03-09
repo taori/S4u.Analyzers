@@ -12,7 +12,6 @@
 		<RootNamespace>S4u.Analyzers</RootNamespace>
 		<AssemblyName>S4u.Analyzers</AssemblyName>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -24,8 +23,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" IncludeInPackage="false" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0" IncludeInPackage="false" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" PrivateAssets="all" IncludeInPackage="false" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0" PrivateAssets="all" IncludeInPackage="false" />
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" IncludeInPackage="false"/>
 	</ItemGroup>
 
@@ -47,8 +46,10 @@
 	<!-- 👇 Add a new target that runs before the task that lists all the files to include in the NuGet package.
 					This task must run after the packages resolution target -->
 	<Target Name="AddNuGetDlls" BeforeTargets="_GetPackageFiles">
+<!--	<Target Name="PackTask" BeforeTargets="_GetPackageFiles">-->
 		<!-- Merge the collection of PackageReference and Assemblies using the NuGetPackageId key.
 				 This produces a new list containing the DLL path and the "IncludeInPackage" metadata-->
+		<Message Importance="High" Text="Why does this not work?" />
 		<JoinItems Left="@(ResolvedCompileFileDefinitions)" LeftKey="NuGetPackageId" LeftMetadata="*"
 							 Right="@(PackageReference)" RightKey="" RightMetadata="*"
 							 ItemSpecToUse="Left">
@@ -69,12 +70,11 @@
 						Pack="true"
 						PackagePath="analyzers/dotnet/cs"
 						Visible="false" />
-
-			<!-- Add the DLL produced by the current project to the NuGet package -->
-			<None Include="$(OutputPath)\$(AssemblyName).dll"
-						Pack="true"
-						PackagePath="analyzers/dotnet/cs"
-						Visible="false" />
+			
+			<Content Include="$(OutputPath)$(AssemblyName).dll"
+						IncludeInPackage="True"
+						Pack="True"
+						PackagePath="analyzers/dotnet/cs" />
 		</ItemGroup>
 	</Target>
 	
