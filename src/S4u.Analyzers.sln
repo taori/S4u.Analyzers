@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "package", "package", "{56F5
 		..\scripts\build.ps1 = ..\scripts\build.ps1
 		..\.github\workflows\CI.yml = ..\.github\workflows\CI.yml
 		Directory.Build.props = Directory.Build.props
-		nuget.config = nuget.config
 		..\build\Project.Common.props = ..\build\Project.Common.props
 		..\README.md = ..\README.md
 		..\build\SourceLink.props = ..\build\SourceLink.props
