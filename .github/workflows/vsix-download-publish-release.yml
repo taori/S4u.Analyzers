@@ -72,19 +72,27 @@ jobs:
       - name: Download via CURL
         shell: pwsh
         run: |
-          mkdir /a2
-          curl -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L -o /a2/firmware.zip "https://api.github.com/repos/taori/S4u.Analyzers/actions/artifacts/3082294086/zip"
-      
+          mkdir /download
+          $url = "https://api.github.com/repos/taori/S4u.Analyzers/actions/artifacts"
+          $response = Invoke-RestMethod -Uri $url -Headers @{ "User-Agent" = "PowerShellScript" }
+          $filtered = $response.artifacts | Where-Object {
+            $_.name -eq "Logging.vsix" -and $_.workflow_run.head_branch -eq "main"
+          }
+          $latest = $filtered | Sort-Object -Property created_at -Descending | Select-Object -First 1
+          #$latest | Format-List
+          curl -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L -o /download/download.zip "$($latest.archive_download_url)"
+          
+          Expand-Archive -Path "/download/download.zip" -DestinationPath "./unzipped" -Force
+
       - name: Display structure of downloaded files
-        run: ls -R /a2
+        run: ls -R /unzipped
             
       - name: Download Package artifact
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.packageName }}.vsix
           run-id: '${{ github.run_id }}'
-          path: /artifacts
-          
+          path: /artifacts          
 
       - name: Display structure of downloaded files
         run: ls -R /artifacts
