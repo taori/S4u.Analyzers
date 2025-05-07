@@ -71,9 +71,7 @@ jobs:
 
       - name: Download via CURL
         run: | 
-          curl -H "Accept: application/vnd.github+json" ^
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" ^
-          -L -o firmware.zip "https://api.github.com/repos/taori/S4u.Analyzers/actions/artifacts/3082294086/zip"
+          curl -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L -o firmware.zip "https://api.github.com/repos/taori/S4u.Analyzers/actions/artifacts/3082294086/zip"
       
       - name: Display structure of downloaded files
         run: ls -R /a2
