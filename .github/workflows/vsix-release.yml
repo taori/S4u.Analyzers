@@ -1,4 +1,4 @@
-name: "VSIX Release ${{ inputs.csprojPath }}"
+name: "VSIX Build & Release"
 permissions:
   actions: write
   contents: write
