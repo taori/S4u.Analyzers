@@ -47,7 +47,12 @@ on:
         description: dotnet versions of the workflow
         default: "9.0.0"
         required: false
-        
+      
+      artifactRunNumber:
+        type: string
+        description: Run number to download the artifact
+        required: true
+    
     secrets:      
       vsMarketAccessToken:
         description: VS Market secret
@@ -68,6 +73,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.packageName }}.vsix
+          run-id: '${{ github.run_id }}'
           path: /artifacts
 
       - name: Display structure of downloaded files
