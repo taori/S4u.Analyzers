@@ -1,4 +1,4 @@
-name: "VSIX Build & Release"
+name: "VSIX Download Artifact & Release"
 permissions:
   actions: write
   contents: write

@@ -10,6 +10,7 @@
     <File Path="..\..\.github\workflows\CI-Logging.yml" />
     <File Path="..\..\.github\workflows\vsix-release.yml" />
     <File Path="..\..\.github\workflows\vsix-download-publish-release.yml" />
+    <File Path="..\..\.github\workflows\CI-Logging-Publish.yml" />
   </Folder>
   <Folder Name="/scripts/">
     <File Path="scripts\build-nupkg.ps1" />
