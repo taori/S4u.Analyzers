@@ -53,6 +53,6 @@ public class CustomCodeFixTest<TAnalyzer, TCodeFixProvider>
 internal static class TestConfiguration
 {
 	public static ReferenceAssemblies ReferenceAssemblies { get; } = ReferenceAssemblies.Net.Net80
-		// .AddPackages([new PackageIdentity("SomePackageId", "8.1.0")])
+		.AddPackages([new PackageIdentity("Arc4u.Standard.Diagnostics.Serilog", "8.1.0")])
 		;
 }

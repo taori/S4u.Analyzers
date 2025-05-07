@@ -7,12 +7,15 @@
 
 	<ItemGroup>
 		<None Remove="DDD.UbiquitousLanguageRegistry.txt"/>
-		<AdditionalFiles Include="DDD.UbiquitousLanguageRegistry.txt"/>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Logging.Codefixes\Logging.Codefixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	  <ProjectReference Include="..\Logging.Analyzers\Logging.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Arc4u.Standard.Diagnostics.Serilog" Version="8.2.1" />
 	</ItemGroup>
 
 </Project>
