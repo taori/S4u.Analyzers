@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>0.1.0</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
+    <VersionPrefix>0.2.0</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
     <PackageId>S4U.Logging.Analyzers</PackageId>
     <Authors>A</Authors>
     <PackageLicenseUrl>https://www.github.com/taori/S4u.Analyzers/analyzers/Logging/resources/LICENSE</PackageLicenseUrl>
