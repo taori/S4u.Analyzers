@@ -67,7 +67,6 @@ jobs:
           }
 
   publish:
-    needs: [ parameters ]
     uses: ./.github/workflows/vsix-download-publish-release.yml
     with:      
       packageName: Logging
