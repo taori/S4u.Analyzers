@@ -1,0 +1,91 @@
+name: CI - S4u.Analyzers
+
+permissions:
+  actions:
+    write
+  contents: 
+    write    
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/workflows/CI-S4u.Analyzers.yml
+      - analyzers/S4u.Analyzers/**/*
+  
+  pull_request:
+    branches: [ main ]
+    types:
+      - opened
+      - synchronize
+  
+  workflow_dispatch:
+    inputs:
+      publish:
+        type: boolean
+        description: run publish?
+        default: false
+        
+  env:
+    
+    
+jobs:
+
+  parameters:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      publish: ${{ steps.parameters.outputs.publish }}
+    
+    steps:
+
+      - name: Setting up parameters
+        id: parameters
+        shell: pwsh
+        run: |
+          Write-Host "Setting up parameters"
+          
+          $branch = "main"
+          $publ = "${{github.event.inputs.publish}}"
+          $bnr = "${{github.run_number}}"
+          
+          $commitMode = "noop"          
+          if($commitMode -eq "noop" -and "${{github.event_name}}" -eq "workflow_dispatch") {
+              $commitMode = "dispatch" }
+          if($commitMode -eq "noop" -and "$branch|pull_request|closed|true" -eq "${{github.ref_name}}|${{github.event_name}}|${{github.event.action}}|${{github.event.pull_request.merged}}") {
+              $commitMode = "pushMerge" }
+          if($commitMode -eq "noop" -and "$branch|push" -eq "${{github.ref_name}}|${{github.event_name}}") {
+              $commitMode = "push" }
+          if("${{github.event_name}}" -eq "workflow_dispatch" -and [string]::IsNullOrEmpty($suffix) -eq $false){
+              $suffix = "$($suffix.TrimEnd(".")).$bnr" }
+          
+          $json = @"
+          {
+            "publish" :             {"push" : "false",      "pushMerge" : "false",      "noop" : "false",   "dispatch" : "$publ"}
+          }
+          "@ | ConvertFrom-Json
+          
+          $props = $json.psobject.properties.name
+          
+          Write-Host "Identified commit mode $commitMode"
+          echo "Identified commit mode $commitMode" >> $env:GITHUB_STEP_SUMMARY
+          foreach($prop in $props){
+            Write-Host "$prop=$($json.$prop.$commitMode)"
+            echo "$prop=$($json.$prop.$commitMode)" >> $env:GITHUB_OUTPUT
+            echo "$prop=$($json.$prop.$commitMode)" >> $env:GITHUB_STEP_SUMMARY
+          }
+
+  build:
+    needs: [ parameters ]
+    uses: ./.github/workflows/vsix-release.yml
+    with:      
+      packageName: S4u.Analyzers
+      csprojPath: analyzers/S4u.Analyzers/S4u.Analyzers.Vsix/S4u.Analyzers.Vsix.csproj
+      packageSolutionPath: analyzers/S4u.Analyzers/S4u.Analyzers.slnx
+      vsixManifestPath: analyzers/S4u.Analyzers/S4u.Analyzers.Vsix/source.extension.vsixmanifest
+      vsMarketManifestPath: analyzers/S4u.Analyzers/vs-publish.json
+      runPublish: ${{ (github.event_name == 'workflow_dispatch' && needs.parameters.outputs.publish) || (contains(github.event.head_commit.message, '[release]') && github.ref_name == 'main') }}
+      versionNumber: '' # empty uses the vsix version and only bumps the build number
+      dotnetVersion: |
+        9.0.x
+    secrets:
+      vsMarketAccessToken: ${{ secrets.VSMARKETACCESSTOKEN }}

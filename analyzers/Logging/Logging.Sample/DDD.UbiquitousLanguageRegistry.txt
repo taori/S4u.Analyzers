@@ -1,0 +1,8 @@
+Customer
+Product
+Stock
+Shop
+Employee
+Cat
+Monkey
+Ape
