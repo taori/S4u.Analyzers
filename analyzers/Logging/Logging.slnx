@@ -1,0 +1,35 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/deployments/">
+    <Project Path="Logging.Package/Logging.Package.csproj" />
+    <Project Path="Logging.Vsix/Logging.Vsix.csproj" />
+    <File Path="..\..\.github\workflows\CI-Logging.yml" />
+  </Folder>
+  <Folder Name="/scripts/">
+    <File Path="scripts\build-nupkg.ps1" />
+    <File Path="scripts\build-vsix.ps1" />
+    <File Path="scripts\verify.ps1" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="Logging.Analyzers\Logging.Analyzers.csproj" Type="Classic C#">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Debug|x86" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+      <Configuration Solution="Release|x86" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="Logging.Codefixes\Logging.Codefixes.csproj" Type="Classic C#">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Debug|x86" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+      <Configuration Solution="Release|x86" Project="Release|Any CPU" />
+    </Project>
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Logging.Sample/Logging.Sample.csproj" />
+    <Project Path="Logging.Test/Logging.Test.csproj" />
+  </Folder>
+</Solution>

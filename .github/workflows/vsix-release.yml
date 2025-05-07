@@ -1,0 +1,131 @@
+name: "VSIX Release ${{ inputs.csprojPath }}"
+permissions:
+  actions: write
+  contents: write
+
+on:
+  workflow_call:
+    inputs:
+      packageName:
+        type: string
+        description: Name of the analyzer package
+        required: true
+        
+      csprojPath:
+        type: string
+        description: Path to the .csproj
+        required: true
+        
+      packageSolutionPath:
+        type: string
+        description: Path to the .slnx
+        required: true
+        
+      vsixManifestPath:
+        type: string
+        description: Path to the .vsixmanifest
+        required: true
+        
+      vsMarketManifestPath:
+        type: string
+        description: Path to the vs-publish.json
+        required: true
+        
+      runPublish:
+        type: boolean
+        description: Whether to run the publish steps
+        required: true
+        
+      versionNumber:
+        type: string
+        description: Version for the vsix package
+        default: ''
+        required: false
+        
+      dotnetVersion:
+        type: string
+        description: dotnet versions of the workflow
+        default: "9.0.0"
+        required: false
+        
+    secrets:      
+      vsMarketAccessToken:
+        description: VS Market secret
+        required: true
+        
+jobs:
+  build:
+    outputs:
+      version: ${{ steps.vsix_version.outputs.version-number }}
+    name: Build
+    runs-on: windows-latest
+    env:
+      Configuration: Release
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4.3.1
+        with:
+          dotnet-version: ${{ inputs.dotnetVersion }}
+
+      - name: Increment VSIX version
+        id: vsix_version
+        uses: timheuer/vsix-version-stamp@9d38292e99e54046455bb68c6a2b5113d269a7d0
+        with:
+          manifest-file: ${{ inputs.vsixManifestPath }}
+          version-number: ${{ inputs.versionNumber }}          
+
+      - name: Build
+        run: msbuild "${{ inputs.csprojPath }}" /v:m -restore /p:OutDir=\_built
+
+      - name: Test
+        run: dotnet test ${{ inputs.packageSolutionPath }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.packageName }}.vsix
+          path: /_built/**/*.vsix
+
+  publish:
+    if: ${{ inputs.runPublish }}
+    needs: build
+    runs-on: windows-latest
+    env: 
+      ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Download Package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.packageName }}.vsix
+
+      - name: Upload to Open VSIX
+        uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
+        with:
+          vsix-file: ${{ inputs.packageName }}.vsix
+
+      - name: Publish extension to Marketplace
+        if: ${{ env.ACCESSTOKEN != '' }}
+        uses: cezarypiatek/VsixPublisherAction@d28bc8109d6eaa67fa28e611d5b4557e90683bdd
+        with:
+          extension-file: '${{ inputs.packageName }}.vsix'
+          publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
+          personal-access-code: ${{ secrets.vsMarketAccessToken }}
+
+      - name: Tag and release
+        id: tag_release
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
+        with:
+          body: release ${{ needs.build.outputs.version }}
+          generate_release_notes: true
+          tag_name: ${{ needs.build.outputs.version }}
+          files: |
+            **/*.vsix
