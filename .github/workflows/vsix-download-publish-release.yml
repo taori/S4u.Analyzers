@@ -57,7 +57,6 @@ jobs:
 
   publish:
     if: ${{ inputs.runPublish }}
-    needs: build
     runs-on: windows-latest
     env: 
       ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}
@@ -90,12 +89,12 @@ jobs:
           publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
           personal-access-code: ${{ secrets.vsMarketAccessToken }}
 
-      - name: Tag and release
-        id: tag_release
-        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
-        with:
-          body: release ${{ needs.build.outputs.version }}
-          generate_release_notes: true
-          tag_name: ${{ needs.build.outputs.version }}
-          files: |
-            **/*.vsix
+#      - name: Tag and release
+#        id: tag_release
+#        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
+#        with:
+#          body: release ${{ needs.build.outputs.version }}
+#          generate_release_notes: true
+#          tag_name: ${{ needs.build.outputs.version }}
+#          files: |
+#            **/*.vsix
