@@ -7,6 +7,7 @@
   <Folder Name="/deployments/">
     <Project Path="Logging.Package/Logging.Package.csproj" />
     <Project Path="Logging.Vsix/Logging.Vsix.csproj" />
+    <File Path="..\..\.github\workflows\CI-Logging.yml" />
   </Folder>
   <Folder Name="/scripts/">
     <File Path="scripts\build-nupkg.ps1" />
