@@ -80,7 +80,7 @@ jobs:
       packageSolutionPath: analyzers/Logging/Logging.slnx
       vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
       vsMarketManifestPath: analyzers/Logging/vs-publish.json
-      runPublish: ${{ (github.event_name == 'workflow_dispatch' && needs.parameters.outputs.publish) || (contains(github.event.head_commit.message, '[release]') && github.ref_name == 'main') }}
+      runPublish: ${{ (github.event_name == 'workflow_dispatch' && needs.parameters.outputs.publish) || (contains(github.event.head_commit.message, '[release]') && github.ref_name == 'main') == 'true' }}
       versionNumber: '' # empty uses the vsix version and only bumps the build number
       dotnetVersion: |
         9.0.x
