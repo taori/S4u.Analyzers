@@ -76,40 +76,26 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.packageName }}.vsix
-          github-token: ${{ secrets.downloadSecret }} # token with actions:read permissions on target repo
+#          github-token: ${{ secrets.downloadSecret }} # token with actions:read permissions on target repo
+          github-token: ${{ secrets.GITHUB_TOKEN }} # token with actions:read permissions on target repo
           repository: taori/S4u.Analyzers
-          run-id: 14896117076
+          run-id: ${{ inputs.artifactRunNumber }}
           path: /unzipped2/
           
       - name: print files unzipped2
         shell: pwsh
         run: Get-ChildItem -Path "/unzipped2/" -Recurse
 
-      - name: Download via CURL
-        shell: pwsh
-        run: |
-          mkdir /download
-          $url = "https://api.github.com/repos/taori/S4u.Analyzers/actions/artifacts"
-          $response = Invoke-RestMethod -Uri $url -Headers @{ "User-Agent" = "PowerShellScript" }
-          $filtered = $response.artifacts | Where-Object {
-            $_.name -eq "Logging.vsix" -and $_.workflow_run.head_branch -eq "main"
-          }
-          $latest = $filtered | Sort-Object -Property created_at -Descending | Select-Object -First 1
-          #$latest | Format-List
-          curl -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L -o /download/download.zip "$($latest.archive_download_url)"
-          
-          Expand-Archive -Path "/download/download.zip" -DestinationPath "/unzipped" -Force
-
       - name: Upload to Open VSIX
         uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
         with:
-          vsix-file: '/unzipped/${{ inputs.packageName }}.Vsix.vsix'
+          vsix-file: '/unzipped2/${{ inputs.packageName }}.Vsix.vsix'
 
       - name: Publish extension to Marketplace
         if: ${{ env.ACCESSTOKEN != '' }}
         uses: cezarypiatek/VsixPublisherAction@d28bc8109d6eaa67fa28e611d5b4557e90683bdd
         with:
-          extension-file: '/unzipped/${{ inputs.packageName }}.Vsix.vsix'
+          extension-file: '/unzipped2/${{ inputs.packageName }}.Vsix.vsix'
           publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
           personal-access-code: ${{ secrets.vsMarketAccessToken }}
 
