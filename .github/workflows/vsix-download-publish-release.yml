@@ -72,7 +72,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.packageName }}.vsix
-          github-token: ${{ secrets.GITHUB_TOKEN }} # token with actions:read permissions on target repo
+          github-token: ${{ secrets.PATLOCAL }} # token with actions:read permissions on target repo
           repository: taori/S4u.Analyzers
           run-id: 14896117076
 
