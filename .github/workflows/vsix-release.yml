@@ -107,18 +107,18 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.packageName }}.vsix
-          path: /artifacts
+          path: ${{github.workspace}}/artifacts
 
       - name: Upload to Open VSIX
         uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
         with:
-          vsix-file: '/artifacts/${{ inputs.packageName }}.Vsix.vsix'
+          vsix-file: '${{github.workspace}}/artifacts/${{ inputs.packageName }}.Vsix.vsix'
 
       - name: Publish extension to Marketplace
         if: ${{ env.ACCESSTOKEN != '' }}
         uses: cezarypiatek/VsixPublisherAction@d28bc8109d6eaa67fa28e611d5b4557e90683bdd
         with:
-          extension-file: '/artifacts/${{ inputs.packageName }}.Vsix.vsix'
+          extension-file: '${{github.workspace}}/artifacts/${{ inputs.packageName }}.Vsix.vsix'
           publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
           personal-access-code: ${{ secrets.vsMarketAccessToken }}
 
@@ -130,4 +130,4 @@ jobs:
           generate_release_notes: true
           tag_name: ${{ needs.build.outputs.version }}
           files: |
-            /artifacts/**/*.vsix
+            ${{github.workspace}}/artifacts/**/*.vsix
