@@ -25,11 +25,11 @@ on:
       dotnetVersion:
         type: string
         description: dotnet versions of the workflow
-        default: "9.0.0"
+        default: "9.0.x"
         required: false
         
 jobs:
-  build:
+  execute:
     runs-on: windows-latest
 
     steps:
