@@ -5,9 +5,6 @@ permissions:
     write
   contents: 
     write
-env:
-  secrets
-
 on:  
   workflow_dispatch:
     inputs: 
