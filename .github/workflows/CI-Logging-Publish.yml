@@ -4,7 +4,10 @@ permissions:
   actions:
     write
   contents: 
-    write    
+    write
+env:
+  secrets
+
 on:  
   workflow_dispatch:
     inputs: 
@@ -67,6 +70,7 @@ jobs:
       packageSolutionPath: analyzers/Logging/Logging.slnx
       vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
       vsMarketManifestPath: analyzers/Logging/vs-publish.json
+      downloadSecret: ${{ secrets.PATLOCAL }}
       runPublish: true
       artifactRunNumber: ${{ inputs.runNumber }}
       versionNumber: '' # empty uses the vsix version and only bumps the build number

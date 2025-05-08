@@ -58,6 +58,10 @@ on:
         description: VS Market secret
         required: true
         
+      downloadSecret:
+        description: PAT artifact download
+        required: true
+        
 jobs:
 
   publish:
@@ -72,9 +76,14 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.packageName }}.vsix
-          github-token: ${{ secrets.PATLOCAL }} # token with actions:read permissions on target repo
+          github-token: ${{ secrets.downloadSecret }} # token with actions:read permissions on target repo
           repository: taori/S4u.Analyzers
           run-id: 14896117076
+          path: /unzipped2/
+          
+      - name: print files unzipped2
+        shell: pwsh
+        run: Get-ChildItem -Path "/unzipped2/" -Recurse
 
       - name: Download via CURL
         shell: pwsh
