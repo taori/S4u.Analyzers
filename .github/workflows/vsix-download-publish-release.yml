@@ -78,11 +78,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }} # token with actions:read permissions on target repo
           repository: taori/S4u.Analyzers
           run-id: ${{ inputs.artifactRunNumber }}
-          path: /unzipped2/
+          path: ${{ github.workspace }}/unzipped2/
           
       - name: print files unzipped2
         shell: pwsh
-        run: Get-ChildItem -Path "/unzipped2/" -Recurse
+        run: Get-ChildItem -Path "${{ github.workspace }}/unzipped2/" -Recurse
 
 #      - name: Upload to Open VSIX
 #        uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
@@ -93,7 +93,7 @@ jobs:
         if: ${{ env.ACCESSTOKEN != '' }}
         uses: cezarypiatek/VsixPublisherAction@d28bc8109d6eaa67fa28e611d5b4557e90683bdd
         with:
-          extension-file: '/unzipped2/${{ inputs.packageName }}.Vsix.vsix'
+          extension-file: '"${{ github.workspace }}/unzipped2/"${{ inputs.packageName }}.Vsix.vsix'
           publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
           personal-access-code: ${{ secrets.vsMarketAccessToken }}
         env:
