@@ -62,7 +62,7 @@ jobs:
   publish:
     uses: ./.github/workflows/vsix-download-publish-release.yml
     with:      
-      packageName: Logging
+      packageName: Logging.Vsix
       csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
       packageSolutionPath: analyzers/Logging/Logging.slnx
       vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
