@@ -1,4 +1,4 @@
-name: "VSIX Build & Release"
+name: "VSIX Release"
 permissions:
   actions: write
   contents: write
@@ -54,44 +54,6 @@ on:
         required: true
         
 jobs:
-  build:
-    outputs:
-      version: ${{ steps.vsix_version.outputs.version-number }}
-    name: Build
-    runs-on: windows-latest
-    env:
-      Configuration: Release
-
-    steps:
-      - uses: actions/checkout@v4.1.7
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-        
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4.3.1
-        with:
-          dotnet-version: ${{ inputs.dotnetVersion }}
-
-      - name: Increment VSIX version
-        id: vsix_version
-        uses: timheuer/vsix-version-stamp@9d38292e99e54046455bb68c6a2b5113d269a7d0
-        with:
-          manifest-file: ${{ inputs.vsixManifestPath }}
-          version-number: ${{ inputs.versionNumber }}          
-
-      - name: Build
-        run: msbuild "${{ inputs.csprojPath }}" /v:m -restore /p:OutDir=\_built
-
-      - name: Test
-        run: dotnet test ${{ inputs.packageSolutionPath }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.packageName }}.vsix
-          path: /_built/**/*.vsix
-          retention-days: 7
 
   publish:
     if: ${{ inputs.runPublish }}
@@ -121,13 +83,3 @@ jobs:
           extension-file: '${{github.workspace}}/artifacts/${{ inputs.packageName }}.Vsix.vsix'
           publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
           personal-access-code: ${{ secrets.vsMarketAccessToken }}
-
-      - name: Tag and release
-        id: tag_release
-        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
-        with:
-          body: release ${{ needs.build.outputs.version }}
-          generate_release_notes: true
-          tag_name: ${{ needs.build.outputs.version }}
-          files: |
-            ${{github.workspace}}/artifacts/**/*.vsix
