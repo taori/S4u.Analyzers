@@ -91,6 +91,7 @@ jobs:
         with:
           name: ${{ inputs.packageName }}.vsix
           path: /_built/**/*.vsix
+          retention-days: 7
 
   publish:
     if: ${{ inputs.runPublish }}
