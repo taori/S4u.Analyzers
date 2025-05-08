@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Logging.736b54f0-fd0f-4bc8-9f53-c42eaebb6ac9" Version="0.1.0.0" Language="en-US" Publisher="A"/>
-    <DisplayName>Logging</DisplayName>
-    <Description xml:space="preserve">This is a sample diagnostic extension for the .NET Compiler Platform ("Roslyn").</Description>
-    <MoreInfo>https://github.com/taori/Logging</MoreInfo>
+    <Identity Id="Logging.736b54f0-fd0f-4bc8-9f53-c42eaebb6ac9" Version="0.2.0.0" Language="en-US" Publisher="taori"/>
+    <DisplayName>S4U.Analyzers.Logging</DisplayName>
+    <Description xml:space="preserve">This extension is meant to be used in conjunction with Arc4U logging. Do not use Arc4U if you can avoid it at all</Description>
+    <MoreInfo>https://github.com/taori/S4U.Analyzers</MoreInfo>
     <License>Resources\LICENSE</License>
     <Icon>Resources\icon.png</Icon>
     <PreviewImage>Resources\icon.png</PreviewImage>
