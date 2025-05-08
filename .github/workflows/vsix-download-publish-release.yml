@@ -67,8 +67,6 @@ jobs:
   publish:
     if: ${{ inputs.runPublish }}
     runs-on: windows-latest
-    env: 
-      ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}
 
     steps:
       - uses: actions/checkout@v4.1.7
@@ -86,10 +84,10 @@ jobs:
         shell: pwsh
         run: Get-ChildItem -Path "/unzipped2/" -Recurse
 
-      - name: Upload to Open VSIX
-        uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
-        with:
-          vsix-file: '/unzipped2/${{ inputs.packageName }}.Vsix.vsix'
+#      - name: Upload to Open VSIX
+#        uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
+#        with:
+#          vsix-file: '/unzipped2/${{ inputs.packageName }}.Vsix.vsix'
 
       - name: Publish extension to Marketplace
         if: ${{ env.ACCESSTOKEN != '' }}
@@ -98,6 +96,8 @@ jobs:
           extension-file: '/unzipped2/${{ inputs.packageName }}.Vsix.vsix'
           publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
           personal-access-code: ${{ secrets.vsMarketAccessToken }}
+        env:
+          ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}
 
 #      - name: Tag and release
 #        id: tag_release
