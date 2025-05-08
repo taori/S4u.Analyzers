@@ -9,6 +9,10 @@ $projectName = "Logging"
 $tempDir = Join-Path $env:TEMP $(New-Guid) | %{ mkdir $_ }
 
 $sln = Resolve-Path "$r/../$projectName.slnx"
+
+"Cleaning Project" | Write-Host -Foreground Green
+dotnet clean $sln
+
 $projects = @(
     Resolve-Path "$r/../$projectName.Analyzers/$projectName.Analyzers.csproj"
     Resolve-Path "$r/../$projectName.Codefixes/$projectName.Codefixes.csproj"    

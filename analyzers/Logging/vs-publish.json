@@ -5,12 +5,12 @@
   ],
   "identity": {
     "internalName": "Logging",
-    "tags": "analyzer"
+    "tags": ["analyzer"]
   },
   "overview": "analyzer.md",
   "priceCategory": "free",
   "publisher": "taori",
   "private": false,
   "qna": true,
-  "repo": "https://github.com/taori/Logging"
+  "repo": "https://github.com/taori/S4u.Analyzers"
 }

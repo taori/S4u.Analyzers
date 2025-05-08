@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="Logging.736b54f0-fd0f-4bc8-9f53-c42eaebb6ac9" Version="0.2.0.0" Language="en-US" Publisher="taori"/>
-    <DisplayName>S4U.Analyzers.Logging</DisplayName>
-    <Description xml:space="preserve">This extension is meant to be used in conjunction with Arc4U logging. Do not use Arc4U if you can avoid it at all</Description>
-    <MoreInfo>https://github.com/taori/S4U.Analyzers</MoreInfo>
-    <License>Resources\LICENSE</License>
-    <Icon>Resources\icon.png</Icon>
-    <PreviewImage>Resources\icon.png</PreviewImage>
-    <Tags>analyzer</Tags>
-  </Metadata>
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,18.0)" />
-  </Installation>
-  <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-  </Dependencies>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Logging.Codefixes" Path="|Logging.Codefixes|"/>
-    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Logging.Codefixes" Path="|Logging.Codefixes|"/>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Logging.Analyzers" Path="|Logging.Analyzers|"/>
-    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Logging.Analyzers" Path="|Logging.Analyzers|"/>
-  </Assets>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
-    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,)" DisplayName="Roslyn Language Services" />
-  </Prerequisites>
+	<Metadata>
+		<Identity Id="736b54f0-fd0f-4bc8-9f53-c42eaebb6ac9" Version="0.2.0.0" Language="en-US" Publisher="taori"/>
+		<DisplayName>S4U.Analyzers.Logging</DisplayName>
+		<Description xml:space="preserve">This extension is meant to be used in conjunction with Arc4U logging. Do not use Arc4U if you can avoid it at all</Description>
+		<MoreInfo>https://www.github.com/taori/S4U.Analyzers</MoreInfo>
+		<License>Resources\LICENSE</License>
+		<Icon>Resources\icon.png</Icon>
+		<PreviewImage>Resources\icon.png</PreviewImage>
+		<Tags>analyzer</Tags>
+	</Metadata>
+	<Installation InstalledByMsi="false">
+		<InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0,18.0)">
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+		<InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)">
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+		<InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+	</Installation>
+	<Assets>
+		<Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Logging.Codefixes" Path="|Logging.Codefixes|"/>
+		<Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Logging.Codefixes" Path="|Logging.Codefixes|"/>
+		<Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Logging.Analyzers" Path="|Logging.Analyzers|"/>
+		<Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Logging.Analyzers" Path="|Logging.Analyzers|"/>
+	</Assets>
+	<Prerequisites>
+		<Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
+		<Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[17.0,)" DisplayName="Roslyn Language Services" />
+	</Prerequisites>
 </PackageManifest>

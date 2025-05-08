@@ -69,6 +69,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.7
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.packageName }}.vsix
+          github-token: ${{ secrets.secrets.GITHUB_TOKEN }} # token with actions:read permissions on target repo
+          repository: taori/S4u.Analyzers
+          run-id: 14896117076
+
       - name: Download via CURL
         shell: pwsh
         run: |
