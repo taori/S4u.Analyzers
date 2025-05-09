@@ -8,7 +8,6 @@
     <Project Path="Logging.Package/Logging.Package.csproj" />
     <Project Path="Logging.Vsix/Logging.Vsix.csproj" />
     <File Path="..\..\.github\workflows\CI-Logging.yml" />
-    <File Path="..\..\.github\workflows\vsix-release.yml" />
     <File Path="..\..\.github\workflows\vsix-download-publish-release.yml" />
     <File Path="..\..\.github\workflows\CI-Logging-Publish.yml" />
     <File Path="vs-publish.json" />

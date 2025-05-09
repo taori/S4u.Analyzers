@@ -1,0 +1,71 @@
+﻿name: "get latest artifact run number"
+on:
+  workflow_call:
+    inputs:
+      
+      gitOwner:
+        type: string
+        description: Name of the git owner
+        required: true
+      
+      gitProject:
+        type: string
+        description: Name of the project
+        required: true
+      
+      artifactName:
+        type: string
+        description: Name of the artifact
+        required: true
+      
+      branchName:
+        type: string
+        description: Name of the branch to check for. * if branch should not be filtered
+        default: *
+        required: true
+      
+      gitServerUrl:
+        type: string
+        description: API url for git server
+        default: "api.github.com"
+        required: false
+        
+    outputs:
+      runId: ${{ jobs.execute.outputs.runId }}
+
+jobs:
+  execute:
+    outputs: 
+      runId: ${{ steps.exec.outputs.result }}
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: exec
+        shell: pwsh
+        id: exec
+        run: |  
+          $repoUrl = "https://${{ inputs.gitServerUrl }}/repos/${{ inputs.gitOwner }}/${{ inputs.gitProject }}/actions/artifacts"
+          $c = (Invoke-WebRequest $repoUrl).Content
+          $artifactsJson = $c | ConvertFrom-Json
+          
+          $branchName = "${{ inputs.branchName }}"
+          $artifactName = "${{ inputs.artifactName }}"
+          
+          $matches = @()
+          
+          foreach ($artifact in $artifactsJson.artifacts) {
+            if ($artifact.name -ne $artifactName) { continue }
+            if ($artifact.workflow_run.head_branch -ne $branchName) { continue }
+          
+            $matches += $artifact
+          }
+          
+          if ($matches.Count -eq 0) {
+            Write-Host "No matching artifact found."
+            exit 1
+          }
+          
+          $latest = $matches | Sort-Object -Property created_at -Descending | Select-Object -First 1
+          
+          echo "result=$($latest.workflow_run.id)" >> $env:GITHUB_OUTPUT

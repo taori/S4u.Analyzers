@@ -6,24 +6,15 @@ permissions:
 on:
   workflow_call:
     inputs:
-      packageName:
-        type: string
-        description: Name of the analyzer package
-        required: true
         
-      csprojPath:
-        type: string
-        description: Path to the .csproj
-        required: true
-        
-      packageSolutionPath:
+      artifactName:
         type: string
         description: Path to the .slnx
         required: true
-        
-      vsixManifestPath:
-        type: string
-        description: Path to the .vsixmanifest
+      
+      runNumber:
+        type: number
+        description: Run number of artifact
         required: true
         
       vsMarketManifestPath:
@@ -31,21 +22,10 @@ on:
         description: Path to the vs-publish.json
         required: true
         
-      runPublish:
-        type: boolean
-        description: Whether to run the publish steps
-        required: true
-        
       versionNumber:
         type: string
         description: Version for the vsix package
         default: ''
-        required: false
-        
-      dotnetVersion:
-        type: string
-        description: dotnet versions of the workflow
-        default: "9.0.0"
         required: false
         
     secrets:      
@@ -56,11 +36,7 @@ on:
 jobs:
 
   publish:
-    if: ${{ inputs.runPublish }}
-    needs: build
-    runs-on: windows-latest
-    env: 
-      ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4.1.7
@@ -68,18 +44,27 @@ jobs:
       - name: Download Package artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.packageName }}.vsix
+          name: ${{ inputs.artifactName }}
           path: ${{github.workspace}}/artifacts
+          
+      - name: get artifacts vsix path
+        id: vsixPath
+        shell: pwsh
+        run: |
+          $path = Get-ChildItem -Path "${{github.workspace}}/artifacts" -Filter "*.vsix" | Select-Object -ExpandProperty FullName -First 1
+          echo "result=$path" >> $env:GITHUB_OUTPUT
 
       - name: Upload to Open VSIX
         uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
         with:
-          vsix-file: '${{github.workspace}}/artifacts/${{ inputs.packageName }}.Vsix.vsix'
+          vsix-file: '${{ steps.vsixPath.outputs.result }}'
 
       - name: Publish extension to Marketplace
         if: ${{ env.ACCESSTOKEN != '' }}
         uses: cezarypiatek/VsixPublisherAction@d28bc8109d6eaa67fa28e611d5b4557e90683bdd
         with:
-          extension-file: '${{github.workspace}}/artifacts/${{ inputs.packageName }}.Vsix.vsix'
+          extension-file: '${{ steps.vsixPath.outputs.result }}'
           publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
           personal-access-code: ${{ secrets.vsMarketAccessToken }}
+        env: 
+          ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}

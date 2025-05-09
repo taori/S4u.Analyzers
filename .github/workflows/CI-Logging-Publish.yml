@@ -3,21 +3,40 @@ on:
   workflow_dispatch:
 
 jobs:
+  
+  nupkgRunNumber:
+    uses: ./.github/workflows/get-latest-artifact-run-number.yml
+    with:
+      gitOwner: ${{ github.repository_owner }}
+      gitProject: ${{ github.repository.name }}
+      artifactName: "Logging.nupkg"
+      branchName: "main"
+      
+  vsixRunNumber:
+    uses: ./.github/workflows/get-latest-artifact-run-number.yml
+    with:
+      gitOwner: ${{ github.repository_owner }}
+      gitProject: ${{ github.repository.name }}
+      artifactName: "Logging.vsix"
+      branchName: "main"
+      
   vsix:
     uses: ./.github/workflows/nupkg-publish.yml
-    with:
-      csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
-      packageSolutionPath: analyzers/Logging/Logging.slnx
-      vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
-      artifactName: "Logging.nupkg"
-      dotnetVersion: "9.0.x"
+    needs: [nupkgRunNumber]
+    with:      
+      artifactName: "Logging.nupkg"      
+      runNumber: ${{ needs.nupkgRunNumber.outputs.runId }}      
+      versionNumber: ''
+    secrets:
+      nupkgPublishToken: ${{ secrets.NUGET }}  
+  
   nupkg:
     uses: ./.github/workflows/vsix-publish.yml
+    needs: [vsixRunNumber]
     with:
-      csprojPath: analyzers/Logging/Logging.Package/Logging.Package.csproj
-      packageSolutionPath: analyzers/Logging/Logging.slnx
       artifactName: "Logging.vsix"
-      dotnetVersion: "9.0.x"
+      runNumber: ${{ needs.vsixRunNumber.outputs.runId }}
+      vsMarketManifestPath:
+      versionNumber: ''
     secrets:
       vsMarketAccessToken: ${{ secrets.VSMARKETACCESSTOKEN }}
-      downloadSecret: ${{ secrets.PATLOCAL }}

@@ -8,7 +8,7 @@ on:
         description: Artifact name
         required: true
         
-      runNumer:
+      runNumber:
         type: number
         description: Run number of artifact
         required: true
@@ -25,7 +25,7 @@ on:
         required: true
 
 jobs:
-
+        
   publish:
     if: ${{ env.TOKEN != '' }}
     runs-on: ubuntu-latest
