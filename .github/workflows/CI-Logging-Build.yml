@@ -22,11 +22,11 @@ jobs:
       packageSolutionPath: analyzers/Logging/Logging.slnx
       vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
       artifactName: "Logging.vsix"
-      dotnetVersion: "9.0.0"
+      dotnetVersion: "9.0.x"
   nupkg:
     uses: ./.github/workflows/nupkg-build.yml
     with:
       csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
       packageSolutionPath: analyzers/Logging/Logging.slnx
       artifactName: "Logging.nupkg"
-      dotnetVersion: "9.0.0"
+      dotnetVersion: "9.0.x"
