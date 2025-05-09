@@ -42,7 +42,7 @@ jobs:
           path: ${{ github.workspace }}/artifacts
 
       - name: Release
-        run: dotnet nuget push "${{ github.workspace }}/artifacts/*.nupkg" -k ${{ secrets.nuget }} -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "${{ github.workspace }}/artifacts/*.nupkg" -k ${{ secrets.nupkgPublishToken }} -s https://api.nuget.org/v3/index.json
 
 #      - name: Remove old prereleases
 #        if: ${{ inputs.removePrereleases }}
