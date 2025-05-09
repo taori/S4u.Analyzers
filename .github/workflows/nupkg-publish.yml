@@ -9,7 +9,7 @@ on:
         required: true
         
       runNumber:
-        type: number
+        type: string
         description: Run number of artifact
         required: true
       
@@ -37,6 +37,6 @@ jobs:
           TOKEN: ${{ secrets.nupkgPublishToken }}
         with:
           run-id: ${{ inputs.runNumber }}
-          name: ${{ inputs.artifactName }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          name: ${{ inputs.artifactName }}
           path: ${{ github.workspace }}/artifacts
