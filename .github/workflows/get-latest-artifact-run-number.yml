@@ -31,7 +31,9 @@ on:
         required: false
         
     outputs:
-      runId: ${{ jobs.execute.outputs.runId }}
+      runId: 
+        value: ${{ jobs.execute.outputs.runId }}
+        description: Run number associated with the artifact
 
 jobs:
   execute:
