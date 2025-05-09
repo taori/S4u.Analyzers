@@ -56,5 +56,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifactName }}
-          path: ${{ github.workspace }}/artifacts/*.(*(*.)nupkg|*(*.)snupkg)'       
+          path: ${{ github.workspace }}/artifacts/**/*.nupkg     
           retention-days: 7
