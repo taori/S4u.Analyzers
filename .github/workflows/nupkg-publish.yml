@@ -32,9 +32,6 @@ jobs:
     steps:
       - name: Download Package artifact
         uses: actions/download-artifact@v4
-        if: ${{ env.TOKEN != '' }}
-        env:
-          TOKEN: ${{ secrets.nupkgPublishToken }}
         with:
           run-id: ${{ inputs.runNumber }}
           name: ${{ inputs.artifactName }}
