@@ -1,10 +1,29 @@
 name: CI - Logging - Publish
 on:  
   workflow_dispatch:
+    inputs:
+      branch:
+        description: name of branch artifact to publish
+        default: main
+        required: true
+        type: string
+        
+      publishVsix:
+        description: Whether to publish the vsix artifact
+        default: true
+        required: true
+        type: boolean
+        
+      publishNupkg:
+        description: Whether to publish the nupkg artifact
+        default: true
+        required: true
+        type: boolean
 
 jobs:
   
   nupkgRunNumber:
+    if: ${{ inputs.publishNupkg }}
     uses: ./.github/workflows/get-latest-artifact-run-number.yml
     with:
       gitOwner: ${{ github.repository_owner }}
@@ -13,6 +32,7 @@ jobs:
       branchName: "main"
       
   vsixRunNumber:
+    if: ${{ inputs.publishVsix }}
     uses: ./.github/workflows/get-latest-artifact-run-number.yml
     with:
       gitOwner: ${{ github.repository_owner }}
@@ -21,6 +41,7 @@ jobs:
       branchName: "main"
       
   vsix:
+    if: ${{ inputs.publishNupkg }}
     uses: ./.github/workflows/nupkg-publish.yml
     needs: [nupkgRunNumber]
     with:      
@@ -31,6 +52,7 @@ jobs:
       nupkgPublishToken: ${{ secrets.NUGET }}  
   
   nupkg:
+    if: ${{ inputs.publishVsix }}
     uses: ./.github/workflows/vsix-publish.yml
     needs: [vsixRunNumber]
     with:
