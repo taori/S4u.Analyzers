@@ -1,0 +1,60 @@
+name: "NUPKG Build"
+on:
+  workflow_call:
+    inputs:
+      
+      csprojPath:
+        type: string
+        description: Path to the .csproj
+        required: true
+      
+      packageSolutionPath:
+        type: string
+        description: Path to the .slnx
+        required: true
+      
+      artifactName:
+        type: string
+        description: Name of the created artifact
+        required: true
+      
+      dotnetVersion:
+        type: string
+        description: dotnet versions of the workflow
+        default: "9.0.x"
+        required: false
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Setup MSBuild
+        if: ${{ runner.os == 'Windows'}}
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4.3.1
+        with:
+          dotnet-version: ${{ inputs.dotnetVersion }}
+
+      - name: Restore
+        run: dotnet restore "${{ inputs.packageSolutionPath }}"
+        
+      - name: Build
+        run: dotnet build "${{ inputs.csprojPath }}" -c Release
+
+      - name: Test
+        run: dotnet test ${{ inputs.packageSolutionPath }} -c Release
+
+      - name: Pack
+        run: dotnet pack ${{ inputs.csprojPath }} -c Release -o "${{ github.workspace }}/artifacts"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifactName }}
+          path: ${{ github.workspace }}/artifacts/**/*.nupkg     
+          retention-days: 7

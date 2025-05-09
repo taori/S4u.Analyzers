@@ -1,0 +1,42 @@
+name: "NUPKG Release"
+on:
+  workflow_call:
+    inputs:
+      
+      artifactName:
+        type: string
+        description: Artifact name
+        required: true
+        
+      runNumber:
+        type: number
+        description: Run number of artifact
+        required: true
+      
+      versionNumber:
+        type: string
+        description: Version for the vsix package
+        default: ''
+        required: true
+    
+    secrets:
+      nupkgPublishToken:
+        description: nupkg access token
+        required: true
+
+jobs:
+        
+  publish:
+    if: ${{ env.TOKEN != '' }}
+    runs-on: ubuntu-latest
+    env:
+      TOKEN: ${{ secrets.nupkgPublishToken }}
+
+    steps:
+      - name: Download Package artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.runNumer }}
+          name: ${{ inputs.artifactName }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ github.workspace }}/artifacts

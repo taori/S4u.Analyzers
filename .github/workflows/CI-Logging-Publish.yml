@@ -1,77 +1,64 @@
 name: CI - Logging - Publish
-
-permissions:
-  actions:
-    write
-  contents: 
-    write
 on:  
   workflow_dispatch:
-    inputs: 
-      runNumber:
-        description: Run number of the artifact
+    inputs:
+      branch:
+        description: name of branch artifact to publish
+        default: main
         required: true
         type: string
+        
+      publishVsix:
+        description: Whether to publish the vsix artifact
+        default: true
+        required: true
+        type: boolean
+        
+      publishNupkg:
+        description: Whether to publish the nupkg artifact
+        default: true
+        required: true
+        type: boolean
 
 jobs:
-
-  parameters:
-    runs-on: ubuntu-latest
-    
-    outputs:
-      publish: ${{ steps.parameters.outputs.publish }}
-    
-    steps:
-
-      - name: Setting up parameters
-        id: parameters
-        shell: pwsh
-        run: |
-          Write-Host "Setting up parameters"
-          
-          $branch = "main"
-          $publ = "${{github.event.inputs.publish}}"
-          $bnr = "${{github.run_number}}"
-          
-          $commitMode = "noop"          
-          if($commitMode -eq "noop" -and "${{github.event_name}}" -eq "workflow_dispatch") {
-              $commitMode = "dispatch" }
-          if($commitMode -eq "noop" -and "$branch|pull_request|closed|true" -eq "${{github.ref_name}}|${{github.event_name}}|${{github.event.action}}|${{github.event.pull_request.merged}}") {
-              $commitMode = "pushMerge" }
-          if($commitMode -eq "noop" -and "$branch|push" -eq "${{github.ref_name}}|${{github.event_name}}") {
-              $commitMode = "push" }
-          if("${{github.event_name}}" -eq "workflow_dispatch" -and [string]::IsNullOrEmpty($suffix) -eq $false){
-              $suffix = "$($suffix.TrimEnd(".")).$bnr" }
-          
-          $json = @"
-          {
-            "publish" :             {"push" : "false",      "pushMerge" : "false",      "noop" : "false",   "dispatch" : "$publ"}
-          }
-          "@ | ConvertFrom-Json
-          
-          $props = $json.psobject.properties.name
-          
-          Write-Host "Identified commit mode $commitMode"
-          echo "Identified commit mode $commitMode" >> $env:GITHUB_STEP_SUMMARY
-          foreach($prop in $props){
-            Write-Host "$prop=$($json.$prop.$commitMode)"
-            echo "$prop=$($json.$prop.$commitMode)" >> $env:GITHUB_OUTPUT
-            echo "$prop=$($json.$prop.$commitMode)" >> $env:GITHUB_STEP_SUMMARY
-          }
-
-  publish:
-    uses: ./.github/workflows/vsix-download-publish-release.yml
+  
+  nupkgRunNumber:
+    if: ${{ inputs.publishNupkg }}
+    uses: ./.github/workflows/get-latest-artifact-run-number.yml
+    with:
+      gitOwner: ${{ github.repository_owner }}
+      gitProject: ${{ github.repository.name }}
+      artifactName: "Logging.nupkg"
+      branchName: "main"
+      
+  vsixRunNumber:
+    if: ${{ inputs.publishVsix }}
+    uses: ./.github/workflows/get-latest-artifact-run-number.yml
+    with:
+      gitOwner: ${{ github.repository_owner }}
+      gitProject: ${{ github.repository.name }}
+      artifactName: "Logging.vsix"
+      branchName: "main"
+      
+  vsix:
+    if: ${{ inputs.publishNupkg }}
+    uses: ./.github/workflows/nupkg-publish.yml
+    needs: [nupkgRunNumber]
     with:      
-      packageName: Logging
-      csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
-      packageSolutionPath: analyzers/Logging/Logging.slnx
-      vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
-      vsMarketManifestPath: analyzers/Logging/vs-publish.json
-      runPublish: true
-      artifactRunNumber: ${{ inputs.runNumber }}
-      versionNumber: '' # empty uses the vsix version and only bumps the build number
-      dotnetVersion: |
-        9.0.x
+      artifactName: "Logging.nupkg"      
+      runNumber: ${{ needs.nupkgRunNumber.outputs.runId }}      
+      versionNumber: ''
+    secrets:
+      nupkgPublishToken: ${{ secrets.NUGET }}  
+  
+  nupkg:
+    if: ${{ inputs.publishVsix }}
+    uses: ./.github/workflows/vsix-publish.yml
+    needs: [vsixRunNumber]
+    with:
+      artifactName: "Logging.vsix"
+      runNumber: ${{ needs.vsixRunNumber.outputs.runId }}
+      vsMarketManifestPath:
+      versionNumber: ''
     secrets:
       vsMarketAccessToken: ${{ secrets.VSMARKETACCESSTOKEN }}
-      downloadSecret: ${{ secrets.PATLOCAL }}

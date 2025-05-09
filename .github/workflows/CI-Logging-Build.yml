@@ -1,0 +1,32 @@
+name: CI - Logging - Build
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/workflows/CI-Logging-Build.yml
+      - analyzers/Logging/**/*
+  
+  pull_request:
+    branches: [ main ]
+    types:
+      - opened
+      - synchronize
+  
+  workflow_dispatch: 
+    
+jobs:
+  vsix:
+    uses: ./.github/workflows/vsix-build.yml
+    with:
+      csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
+      packageSolutionPath: analyzers/Logging/Logging.slnx
+      vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
+      artifactName: "Logging.vsix"
+      dotnetVersion: "9.0.x"
+  nupkg:
+    uses: ./.github/workflows/nupkg-build.yml
+    with:
+      csprojPath: analyzers/Logging/Logging.Package/Logging.Package.csproj
+      packageSolutionPath: analyzers/Logging/Logging.slnx
+      artifactName: "Logging.nupkg"
+      dotnetVersion: "9.0.x"

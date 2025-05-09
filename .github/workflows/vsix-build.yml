@@ -1,0 +1,64 @@
+name: "VSIX Build"
+on:
+  workflow_call:
+    inputs:        
+      csprojPath:
+        type: string
+        description: Path to the .csproj
+        required: true
+        
+      packageSolutionPath:
+        type: string
+        description: Path to the .slnx
+        required: true
+        
+      vsixManifestPath:
+        type: string
+        description: Path to the .vsixmanifest
+        required: true
+        
+      artifactName:
+        type: string
+        description: Artifact name
+        required: true
+        
+      dotnetVersion:
+        type: string
+        description: dotnet versions of the workflow
+        default: "9.0.x"
+        required: false
+        
+jobs:
+  execute:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4.3.1
+        with:
+          dotnet-version: ${{ inputs.dotnetVersion }}
+
+      - name: Increment VSIX version
+        id: vsix_version
+        uses: timheuer/vsix-version-stamp@9d38292e99e54046455bb68c6a2b5113d269a7d0
+        with:
+          manifest-file: ${{ inputs.vsixManifestPath }}
+          version-number: ''        
+
+      - name: Build
+        run: msbuild "${{ inputs.csprojPath }}" /v:m -restore /p:OutDir=\_built
+
+      - name: Test
+        run: dotnet test ${{ inputs.packageSolutionPath }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifactName }}
+          path: /_built/**/*.vsix
+          retention-days: 7

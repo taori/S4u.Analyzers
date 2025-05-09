@@ -31,3 +31,5 @@ $vsixFile = Get-ChildItem -Path $tempDir -Filter "*.vsix" | Select-Object -First
 
 Copy-Item -Path $vsixFile -Destination $OutDir
 Remove-Item -Recurse -Force -Path $tempDir
+
+explorer $OutDir
