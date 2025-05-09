@@ -20,9 +20,9 @@ on:
       
       branchName:
         type: string
-        description: Name of the branch to check for. * if branch should not be filtered
-        default: *
-        required: true
+        description: Name of the branch to check for. Empty to disable branch filtering
+        default: ''
+        required: false
       
       gitServerUrl:
         type: string
@@ -56,7 +56,7 @@ jobs:
           
           foreach ($artifact in $artifactsJson.artifacts) {
             if ($artifact.name -ne $artifactName) { continue }
-            if ($artifact.workflow_run.head_branch -ne $branchName) { continue }
+            if ($artifact.workflow_run.head_branch -ne $branchName -and $branchName -ne '') { continue }
           
             $matches += $artifact
           }
