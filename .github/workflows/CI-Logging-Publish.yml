@@ -9,13 +9,13 @@ on:
         type: string
         
       publishVsix:
-        description: Whether to publish the vsix artifact
+        description: Publish Vsix?
         default: true
         required: true
         type: boolean
         
       publishNupkg:
-        description: Whether to publish the nupkg artifact
+        description: Publish Nupkg?
         default: true
         required: true
         type: boolean
@@ -26,19 +26,15 @@ jobs:
     if: ${{ inputs.publishNupkg }}
     uses: ./.github/workflows/get-latest-artifact-run-number.yml
     with:
-      gitOwner: ${{ github.repository_owner }}
-      gitProject: ${{ github.repository.name }}
       artifactName: "Logging.nupkg"
-      branchName: "main"
+      branchName: ${{ inputs.branch }}
       
   vsixRunNumber:
     if: ${{ inputs.publishVsix }}
     uses: ./.github/workflows/get-latest-artifact-run-number.yml
     with:
-      gitOwner: ${{ github.repository_owner }}
-      gitProject: ${{ github.repository.name }}
       artifactName: "Logging.vsix"
-      branchName: "main"
+      branchName: ${{ inputs.branch }}
       
   vsix:
     if: ${{ inputs.publishNupkg }}

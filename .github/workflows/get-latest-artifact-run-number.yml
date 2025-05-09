@@ -3,20 +3,22 @@ on:
   workflow_call:
     inputs:
       
-      gitOwner:
-        type: string
-        description: Name of the git owner
-        required: true
-      
-      gitProject:
-        type: string
-        description: Name of the project
-        required: true
-      
       artifactName:
         type: string
         description: Name of the artifact
         required: true
+        
+      gitOwner:
+        type: string
+        description: Name of the git owner
+        default: ${{ github.repository_owner }}
+        required: false
+      
+      gitProject:
+        type: string
+        description: Name of the project
+        default: ${{ github.event.repository.name }}
+        required: false
       
       branchName:
         type: string
