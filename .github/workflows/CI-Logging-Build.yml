@@ -26,7 +26,7 @@ jobs:
   nupkg:
     uses: ./.github/workflows/nupkg-build.yml
     with:
-      csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
+      csprojPath: analyzers/Logging/Logging.Package/Logging.Package.csproj
       packageSolutionPath: analyzers/Logging/Logging.slnx
       artifactName: "Logging.nupkg"
       dotnetVersion: "9.0.x"

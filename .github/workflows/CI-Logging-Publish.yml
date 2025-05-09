@@ -4,18 +4,20 @@ on:
 
 jobs:
   vsix:
-    uses: ./.github/workflows/vsix-publish.yml
-    with:      
-      packageName: Logging
+    uses: ./.github/workflows/nupkg-publish.yml
+    with:
       csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
       packageSolutionPath: analyzers/Logging/Logging.slnx
       vsixManifestPath: analyzers/Logging/Logging.Vsix/source.extension.vsixmanifest
-      vsMarketManifestPath: analyzers/Logging/vs-publish.json
-      runPublish: true
-      artifactRunNumber: ${{ inputs.runNumber }}
-      versionNumber: '' # empty uses the vsix version and only bumps the build number
-      dotnetVersion: |
-        9.0.x
+      artifactName: "Logging.nupkg"
+      dotnetVersion: "9.0.x"
+  nupkg:
+    uses: ./.github/workflows/vsix-publish.yml
+    with:
+      csprojPath: analyzers/Logging/Logging.Package/Logging.Package.csproj
+      packageSolutionPath: analyzers/Logging/Logging.slnx
+      artifactName: "Logging.vsix"
+      dotnetVersion: "9.0.x"
     secrets:
       vsMarketAccessToken: ${{ secrets.VSMARKETACCESSTOKEN }}
       downloadSecret: ${{ secrets.PATLOCAL }}

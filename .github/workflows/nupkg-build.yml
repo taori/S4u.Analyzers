@@ -31,6 +31,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.7
 
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4.3.1
         with:
@@ -40,13 +43,13 @@ jobs:
         run: dotnet restore "${{ inputs.packageSolutionPath }}"
         
       - name: Build
-        run: dotnet build "${{ inputs.csprojPath }}" --no-restore -c Release
+        run: dotnet build "${{ inputs.csprojPath }}" -c Release
 
       - name: Test
-        run: dotnet test ${{ inputs.packageSolutionPath }} --no-build -c Release
+        run: dotnet test ${{ inputs.packageSolutionPath }} -c Release
 
       - name: Pack
-        run: dotnet pack ${{ inputs.csprojPath }} --no-build -c Release -o "${{ github.workspace }}/artifacts"
+        run: dotnet pack ${{ inputs.csprojPath }} -c Release -o "${{ github.workspace }}/artifacts"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
