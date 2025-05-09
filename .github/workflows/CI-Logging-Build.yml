@@ -16,7 +16,7 @@ on:
     
 jobs:
   vsix:
-    uses: ./.github/workflows/vsix-build.yml
+    uses: ./.github/workflows/build-vsix.yml
     with:
       csprojPath: analyzers/Logging/Logging.Vsix/Logging.Vsix.csproj
       packageSolutionPath: analyzers/Logging/Logging.slnx
@@ -24,7 +24,7 @@ jobs:
       artifactName: "Logging.vsix"
       dotnetVersion: "9.0.x"
   nupkg:
-    uses: ./.github/workflows/nupkg-build.yml
+    uses: ./.github/workflows/build-nupkg.yml
     with:
       csprojPath: analyzers/Logging/Logging.Package/Logging.Package.csproj
       packageSolutionPath: analyzers/Logging/Logging.slnx

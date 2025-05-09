@@ -52,17 +52,17 @@ jobs:
           $path = Get-ChildItem -Path "${{github.workspace}}/artifacts" -Filter "*.vsix" | Select-Object -ExpandProperty FullName -First 1
           echo "result=$path" >> $env:GITHUB_OUTPUT
 
-#      - name: Upload to Open VSIX
-#        uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
-#        with:
-#          vsix-file: '${{ steps.vsixPath.outputs.result }}'
-#
-#      - name: Publish extension to Marketplace
-#        if: ${{ env.ACCESSTOKEN != '' }}
-#        uses: cezarypiatek/VsixPublisherAction@d28bc8109d6eaa67fa28e611d5b4557e90683bdd
-#        with:
-#          extension-file: '${{ steps.vsixPath.outputs.result }}'
-#          publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
-#          personal-access-code: ${{ secrets.vsMarketAccessToken }}
-#        env: 
-#          ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}
+      - name: Upload to Open VSIX
+        uses: timheuer/openvsixpublish@04b38d641d8b7475ab6ddece48e42525d58b0875
+        with:
+          vsix-file: '${{ steps.vsixPath.outputs.result }}'
+
+      - name: Publish extension to Marketplace
+        if: ${{ env.ACCESSTOKEN != '' }}
+        uses: cezarypiatek/VsixPublisherAction@d28bc8109d6eaa67fa28e611d5b4557e90683bdd
+        with:
+          extension-file: '${{ steps.vsixPath.outputs.result }}'
+          publish-manifest-file: ${{ inputs.vsMarketManifestPath }}
+          personal-access-code: ${{ secrets.vsMarketAccessToken }}
+        env: 
+          ACCESSTOKEN: ${{ secrets.vsMarketAccessToken }}

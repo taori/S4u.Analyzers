@@ -38,7 +38,7 @@ jobs:
       
   vsix:
     if: ${{ inputs.publishNupkg }}
-    uses: ./.github/workflows/nupkg-publish.yml
+    uses: ./.github/workflows/publish-nupkg.yml
     needs: [nupkgRunNumber]
     with:      
       artifactName: "Logging.nupkg"      
@@ -49,7 +49,7 @@ jobs:
   
   nupkg:
     if: ${{ inputs.publishVsix }}
-    uses: ./.github/workflows/vsix-publish.yml
+    uses: ./.github/workflows/publish-vsix.yml
     needs: [vsixRunNumber]
     with:
       artifactName: "Logging.vsix"

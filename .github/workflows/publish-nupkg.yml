@@ -40,3 +40,18 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ inputs.artifactName }}
           path: ${{ github.workspace }}/artifacts
+
+      - name: Release
+        run: dotnet nuget push "${{ github.workspace }}/artifacts/*.nupkg" -k ${{ secrets.nuget }} -s https://api.nuget.org/v3/index.json
+
+#      - name: Remove old prereleases
+#        if: ${{ inputs.removePrereleases }}
+#        shell: pwsh
+#        run: |
+#          & dotnet tool install --global NugetUnlister
+#           Get-ChildItem "artifact-export/" -Filter "*.nupkg" | `
+#           %{ $_.Name } | `
+#           Select-String -Pattern "(?<packageId>.+)\.(?<version>\d{1,2}\.\d{1,2}\.\d{1,2}(?:[-\w\d.]+)?)(?=.nupkg)" | `
+#           %{ , @( $_.Matches[0].Groups["packageId"].Value, $_.Matches[0].Groups["version"].Value ) } | `
+#           % { Write-Output "nuget-unlist drop prereleasebefore $($_[0]) $($_[1]) ${{ secrets.nuget }}" `
+#             & nuget-unlist drop prereleasebefore $_[0] $_[1] ${{ secrets.nuget }} }
