@@ -36,7 +36,7 @@ jobs:
       artifactName: "Logging.vsix"
       branchName: ${{ inputs.branch }}
       
-  vsix:
+  nupkg:
     if: ${{ inputs.publishNupkg }}
     uses: ./.github/workflows/publish-nupkg.yml
     needs: [nupkgRunNumber]
@@ -47,14 +47,14 @@ jobs:
     secrets:
       nupkgPublishToken: ${{ secrets.NUGET }}  
   
-  nupkg:
+  vsix:
     if: ${{ inputs.publishVsix }}
     uses: ./.github/workflows/publish-vsix.yml
     needs: [vsixRunNumber]
     with:
       artifactName: "Logging.vsix"
       runNumber: ${{ needs.vsixRunNumber.outputs.runId }}
-      vsMarketManifestPath:
+      vsMarketManifestPath: 'analyzers/Logging/vs-publish.json'
       versionNumber: ''
     secrets:
       vsMarketAccessToken: ${{ secrets.VSMARKETACCESSTOKEN }}
