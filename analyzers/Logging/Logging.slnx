@@ -7,8 +7,21 @@
   <Folder Name="/deployments/">
     <Project Path="Logging.Package/Logging.Package.csproj" />
     <Project Path="Logging.Vsix/Logging.Vsix.csproj" />
-    <File Path="..\..\.github\workflows\CI-Logging-Publish.yml" />
     <File Path="vs-publish.json" />
+  </Folder>
+  <Folder Name="/deployments/repo-scripts/">
+    <File Path="..\..\scripts\override-nupkg-version.ps1" />
+    <File Path="..\..\scripts\override-vsix-version.ps1" />
+  </Folder>
+  <Folder Name="/deployments/workflows/">
+    <File Path="..\..\.github\workflows\build-nupkg.yml" />
+    <File Path="..\..\.github\workflows\build-vsix.yml" />
+    <File Path="..\..\.github\workflows\CI-Logging-Build.yml" />
+    <File Path="..\..\.github\workflows\CI-Logging-Publish.yml" />
+    <File Path="..\..\.github\workflows\get-latest-artifact-run-number.yml" />
+    <File Path="..\..\.github\workflows\publish-github.yml" />
+    <File Path="..\..\.github\workflows\publish-nupkg.yml" />
+    <File Path="..\..\.github\workflows\publish-vsix.yml" />
   </Folder>
   <Folder Name="/scripts/">
     <File Path="scripts\build-nupkg.ps1" />
