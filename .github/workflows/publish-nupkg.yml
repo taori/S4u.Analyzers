@@ -50,7 +50,7 @@ jobs:
           Get-ChildItem -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | `
             %{ `
               Write-Host $_.FullName `
-              &"${{ github.workspace }}/scripts/override-nupkg-version.ps1" -File "$($_.FullName)" -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched" ` 
+              & '${{ github.workspace }}/scripts/override-nupkg-version.ps1' -File "$($_.FullName)" -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched" ` 
             }
           
           Remove-Item "${{ github.workspace }}/artifacts" -Recurse -Force
