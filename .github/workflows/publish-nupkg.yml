@@ -47,12 +47,11 @@ jobs:
         if: ${{ inputs.versionNumber != '' }}
         shell: pwsh
         run: |
-          Get-ChildItem -Recurse -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | Select-Object -ExpandProperty FullName | % { & Write-Host $_ }
-#          Get-ChildItem -Recurse -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | Select-Object -ExpandProperty FullName | % { & '${{ github.workspace }}/scripts/override-nupkg-version.ps1' -File $_ -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched" }
-          
+          Get-ChildItem -Recurse -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | Select-Object -ExpandProperty FullName | % { Write-Host $_ }
           Remove-Item "${{ github.workspace }}/artifacts" -Recurse -Force
           Move-Item -Path "${{ github.workspace }}/artifacts-patched" -Destination "${{ github.workspace }}/artifacts"          
-
+      
+      #          Get-ChildItem -Recurse -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | Select-Object -ExpandProperty FullName | % { & '${{ github.workspace }}/scripts/override-nupkg-version.ps1' -File $_ -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched" }
       - name: Release
         run: dotnet nuget push "${{ github.workspace }}/artifacts/*.nupkg" -k ${{ secrets.nupkgPublishToken }} -s https://api.nuget.org/v3/index.json
 
