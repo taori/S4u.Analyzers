@@ -47,6 +47,7 @@ jobs:
         if: ${{ inputs.versionNumber != '' }}
         shell: pwsh
         run: |
+          Get-ChildItem -Path "${{ github.workspace }}/artifacts" -Recurse
           Get-ChildItem -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | `
             %{ `
               &${{ github.workspace }}/scripts/override-nupkg-version.ps1 -File $_.FullName -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched" ` 
