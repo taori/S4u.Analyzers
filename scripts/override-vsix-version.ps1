@@ -60,7 +60,8 @@ function PatchManifestJson([string] $folder, [string] $newVersion){
     $a.version = $newVersion
     $a | ConvertTo-Json -depth 32| set-content $file
 }
-$tempDir = Join-Path $env:TEMP $(New-Guid) | %{ mkdir $_ }
+
+$tempDir = Join-Path ([Path]::GetTempPath()) $(New-Guid) | %{ mkdir $_ }
 
 Expand-Archive -Path $InputFile -DestinationPath $tempDir
 PatchCatalogJson $tempDir $Version
