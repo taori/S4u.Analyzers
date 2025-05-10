@@ -1,5 +1,5 @@
 using namespace System.IO
-param([string]$File, [string] $Version, [string] $DestinationFolder)
+param([string]$InputFile, [string] $Version, [string] $DestinationFolder)
 
 function PatchVsixManifest([string] $folder, [string] $newVersion){
 
@@ -62,12 +62,12 @@ function PatchManifestJson([string] $folder, [string] $newVersion){
 }
 $tempDir = Join-Path $env:TEMP $(New-Guid) | %{ mkdir $_ }
 
-Expand-Archive -Path $File -DestinationPath $tempDir
+Expand-Archive -Path $InputFile -DestinationPath $tempDir
 PatchCatalogJson $tempDir $Version
 PatchVsixManifest $tempDir $Version
 PatchManifestJson $tempDir $Version
 
-$fullName = [Path]::Combine($DestinationFolder, [Path]::GetFileName($File))
+$fullName = [Path]::Combine($DestinationFolder, [Path]::GetFileName($InputFile))
 if((Test-Path $DestinationFolder) -ne $true){
     New-Item -Type Directory $DestinationFolder | Out-Null
 }

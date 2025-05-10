@@ -47,7 +47,7 @@ jobs:
         if: ${{ inputs.versionNumber != '' }}
         shell: pwsh
         run: |
-          Get-ChildItem -Recurse -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | Select-Object -ExpandProperty FullName | % { Write-Host $_ }
+          Get-ChildItem -Recurse -Path "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | Select-Object -ExpandProperty FullName | % { pwsh -ExecutionPolicy Bypass -File '${{ github.workspace }}/scripts/override-nupkg-version.ps1' -InputFile $_ -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched"  }
           Remove-Item "${{ github.workspace }}/artifacts" -Recurse -Force
           Move-Item -Path "${{ github.workspace }}/artifacts-patched" -Destination "${{ github.workspace }}/artifacts"          
       
