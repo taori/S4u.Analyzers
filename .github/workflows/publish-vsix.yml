@@ -52,9 +52,12 @@ jobs:
         if: ${{ inputs.versionNumber != '' }}
         shell: pwsh
         run: |
-          Get-ChildItem -Path "${{ github.workspace }}/artifacts" -Filter "*.vsix" | `
-            %{ `
-              & '${{ github.workspace }}/scripts/override-vsix-version.ps1' -File "$($_.FullName)" -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched" ` 
+          Get-ChildItem -Path "${{ github.workspace }}/artifacts" -Filter "*.vsix" |
+            %{
+              & '${{ github.workspace }}/scripts/override-vsix-version.ps1' `
+                -File "$($_.FullName)" `
+                -Version "${{ inputs.versionNumber }}" `
+                -DestinationFolder "${{ github.workspace }}/artifacts-patched" 
             }
           
           Remove-Item "${{ github.workspace }}/artifacts" -Recurse -Force
