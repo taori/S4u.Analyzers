@@ -1,4 +1,4 @@
-﻿name: "get latest artifact run number"
+﻿name: "get manual version"
 on:
   workflow_call:
     inputs:
