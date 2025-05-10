@@ -19,6 +19,24 @@ on:
         default: true
         required: true
         type: boolean
+        
+      useManualVersioning:
+        description: Use manual versioning?
+        default: true
+        required: true
+        type: boolean
+        
+      manualVsixVersion:
+        description: Manual version for vsix file - {bnr} is replaced by the current run number
+        required: false
+        type: string
+        default: '0.1.0.{bnr}'
+        
+      manualNupkgVersion:
+        description: Manual version for nupkg file - {bnr} is replaced by the current run number
+        required: false
+        type: string
+        default: '0.1.0-alpha{bnr}'
 
 jobs:
   
@@ -29,32 +47,50 @@ jobs:
       artifactName: "Logging.nupkg"
       branchName: ${{ inputs.branch }}
       
+  getNupkgVersion:
+    if: ${{ inputs.publishNupkg }}
+    uses: ./.github/workflows/get-manual-version.yml
+    needs: [nupkgRunNumber]
+    with:
+      modify: ${{ inputs.useManualVersioning }}
+      inputVersion: ${{ inputs.manualNupkgVersion }}
+      runNumber: ${{ needs.nupkgRunNumber.outputs.runId }}
+  
+  nupkg:
+    if: ${{ inputs.publishNupkg }}
+    uses: ./.github/workflows/publish-nupkg.yml
+    needs: [nupkgRunNumber, getNupkgVersion]
+    with:
+      artifactName: "Logging.nupkg"
+      runNumber: ${{ needs.nupkgRunNumber.outputs.runId }}
+      versionNumber: ${{ needs.getNupkgVersion.outputs.version }}
+    secrets:
+      nupkgPublishToken: ${{ secrets.NUGET }}
+  
   vsixRunNumber:
     if: ${{ inputs.publishVsix }}
     uses: ./.github/workflows/get-latest-artifact-run-number.yml
     with:
       artifactName: "Logging.vsix"
       branchName: ${{ inputs.branch }}
-      
-  nupkg:
-    if: ${{ inputs.publishNupkg }}
-    uses: ./.github/workflows/publish-nupkg.yml
-    needs: [nupkgRunNumber]
-    with:      
-      artifactName: "Logging.nupkg"      
-      runNumber: ${{ needs.nupkgRunNumber.outputs.runId }}      
-      versionNumber: ''
-    secrets:
-      nupkgPublishToken: ${{ secrets.NUGET }}  
+  
+  getVsixVersion:
+    if: ${{ inputs.publishVsix }}
+    uses: ./.github/workflows/get-manual-version.yml
+    needs: [vsixRunNumber]
+    with:
+      modify: ${{ inputs.useManualVersioning }}
+      inputVersion: ${{ inputs.manualVsixVersion }}
+      runNumber: ${{ needs.vsixRunNumber.outputs.runId }}
   
   vsix:
     if: ${{ inputs.publishVsix }}
     uses: ./.github/workflows/publish-vsix.yml
-    needs: [vsixRunNumber]
+    needs: [vsixRunNumber, getVsixVersion]
     with:
       artifactName: "Logging.vsix"
       runNumber: ${{ needs.vsixRunNumber.outputs.runId }}
       vsMarketManifestPath: 'analyzers/Logging/vs-publish.json'
-      versionNumber: ''
+      versionNumber: ${{ needs.getVsixVersion.outputs.version }}
     secrets:
       vsMarketAccessToken: ${{ secrets.VSMARKETACCESSTOKEN }}

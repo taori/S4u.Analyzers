@@ -9,10 +9,10 @@ internal static class Rules
 {
 	internal static class Usage
 	{
-		internal static readonly DiagnosticDescriptor LogStatementIsNotLogged = RuleFrom("S4U0001", 
-			nameof(Translations.S4U0001Title),
-			nameof(Translations.S4U0001MessageFormat),
-			nameof(Translations.S4U0001Description),
+		internal static readonly DiagnosticDescriptor LogStatementIsNotLogged = RuleFrom("S4UL0001", 
+			nameof(Translations.S4UL0001Title),
+			nameof(Translations.S4UL0001MessageFormat),
+			nameof(Translations.S4UL0001Description),
 			DiagnosticSeverity.Warning, Categories.Usage, true);
 	}
 

@@ -1,17 +1,18 @@
-param([string]$File, [string] $Version, [string] $DestinationPath)
+using namespace System.IO
+param([string]$File, [string] $Version, [string] $DestinationFolder)
 
 function PatchVsixManifest([string] $folder, [string] $newVersion){
 
     $file = "$folder/extension.vsixmanifest"
     if((Test-Path $file) -ne $true){ exit 1}
-        
+
     [xml]$vsixXml = Get-Content "$folder/extension.vsixmanifest"
 
     $ns = New-Object System.Xml.XmlNamespaceManager $vsixXml.NameTable
     $ns.AddNamespace("ns", $vsixXml.DocumentElement.NamespaceURI) | Out-Null
-    
+
     $attrVersion = ""
-    
+
     if ($vsixXml.SelectSingleNode("//ns:Identity", $ns)){ # VS2012 format
         $attrVersion = $vsixXml.SelectSingleNode("//ns:Identity", $ns).Attributes["Version"]
     }
@@ -22,7 +23,7 @@ function PatchVsixManifest([string] $folder, [string] $newVersion){
 
     [Version]$version = New-Object Version $newVersion
     $attrVersion.InnerText = $version
-    
+
     $vsixXml.Save("$file") | Out-Null
 }
 
@@ -35,11 +36,11 @@ function PatchCatalogJson([string] $folder, [string] $newVersion){
     $match = [Regex]::Match($idComposite, "([^,]+),version=(.+)")
     $vsixId = $match.Groups[1].Value
     $a.info.id = "$vsixId,version=$newVersion"
-    
+
     $a.packages | % {
         if($_.id.EndsWith($vsixId)){
             $_.version = "$newVersion"
-            
+
             if($null -ne $_.dependencies.$vsixId){
                 $_.dependencies.$vsixId = "$newVersion"
             }
@@ -48,13 +49,13 @@ function PatchCatalogJson([string] $folder, [string] $newVersion){
         }
     }
     #$a.version | % {if($_.name -eq 'test1'){$_.version=3.0}}
-    $a | ConvertTo-Json -depth 32| set-content $file   
+    $a | ConvertTo-Json -depth 32| set-content $file
 }
 
 function PatchManifestJson([string] $folder, [string] $newVersion){
     $file = "$folder/manifest.json"
     if((Test-Path $file) -ne $true){ exit 4}
-    
+
     $a = Get-Content $file -raw | ConvertFrom-Json
     $a.version = $newVersion
     $a | ConvertTo-Json -depth 32| set-content $file
@@ -66,4 +67,12 @@ PatchCatalogJson $tempDir $Version
 PatchVsixManifest $tempDir $Version
 PatchManifestJson $tempDir $Version
 
-Compress-Archive -Path "$tempDir/*" -DestinationPath $DestinationPath -Force
+$fullName = [Path]::Combine($DestinationFolder, [Path]::GetFileName($File))
+if((Test-Path $DestinationFolder) -ne $true){
+    New-Item -Type Directory $DestinationFolder | Out-Null
+}
+
+Compress-Archive -Path "$tempDir/*" -DestinationPath $fullName -Force
+Remove-Item $tempDir -Recurse -Force
+
+return $fullName

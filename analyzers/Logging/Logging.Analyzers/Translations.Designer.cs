@@ -62,36 +62,36 @@ namespace Logging.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to Replace &apos;{0}&apos; with &apos;{1}&apos;.
         /// </summary>
-        public static string S4U0001CodeFixText {
+        public static string S4UL0001CodeFixText {
             get {
-                return ResourceManager.GetString("S4U0001CodeFixText", resourceCulture);
+                return ResourceManager.GetString("S4UL0001CodeFixText", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to This log statement will not produce logs..
         /// </summary>
-        public static string S4U0001Description {
+        public static string S4UL0001Description {
             get {
-                return ResourceManager.GetString("S4U0001Description", resourceCulture);
+                return ResourceManager.GetString("S4UL0001Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; does not produce logging output.
         /// </summary>
-        public static string S4U0001MessageFormat {
+        public static string S4UL0001MessageFormat {
             get {
-                return ResourceManager.GetString("S4U0001MessageFormat", resourceCulture);
+                return ResourceManager.GetString("S4UL0001MessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to A logging method that does not produce output even though it looks like it would. Absolute genius.
         /// </summary>
-        public static string S4U0001Title {
+        public static string S4UL0001Title {
             get {
-                return ResourceManager.GetString("S4U0001Title", resourceCulture);
+                return ResourceManager.GetString("S4UL0001Title", resourceCulture);
             }
         }
     }

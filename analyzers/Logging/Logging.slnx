@@ -22,6 +22,7 @@
     <File Path="..\..\.github\workflows\publish-github.yml" />
     <File Path="..\..\.github\workflows\publish-nupkg.yml" />
     <File Path="..\..\.github\workflows\publish-vsix.yml" />
+    <File Path="..\..\.github\workflows\get-manual-version.yml" />
   </Folder>
   <Folder Name="/scripts/">
     <File Path="scripts\build-nupkg.ps1" />

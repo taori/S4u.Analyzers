@@ -1,5 +1,5 @@
 using namespace System.IO
-param([string]$File, [string] $Version)
+param([string]$File, [string] $Version, [string] $DestinationFolder)
 
 function PatchNuspec([string] $folder, [string] $newVersion){
 
@@ -23,11 +23,19 @@ function PatchNuspec([string] $folder, [string] $newVersion){
 
 $tempDir = Join-Path $env:TEMP $(New-Guid) | %{ mkdir $_ }
 
+Write-Host "Patching $File using tmp folder $tempDir" -ForegroundColor Green
+
 Expand-Archive -Path $File -DestinationPath $tempDir
 $suffixSwap = PatchNuspec $tempDir $Version
 
 $fn = [Path]::GetFileName($File).Replace($suffixSwap[0], $suffixSwap[1])
-$fullName = [Path]::Combine([Path]::GetDirectoryName($File), $fn)
+
+$fullName = [Path]::Combine($DestinationFolder, $fn)
+if((Test-Path $DestinationFolder) -ne $true){
+    New-Item -Type Directory $DestinationFolder | Out-Null
+}
 
 Compress-Archive -Path "$tempDir/*" -DestinationPath $fullName -Force
+Remove-Item $tempDir -Recurse -Force
+
 return $fullName

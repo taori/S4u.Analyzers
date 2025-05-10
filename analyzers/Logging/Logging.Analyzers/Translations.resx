@@ -117,16 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-    <data name="S4U0001Description" xml:space="preserve">
+    <data name="S4UL0001Description" xml:space="preserve">
         <value>This log statement will not produce logs.</value>
     </data>
-    <data name="S4U0001Title" xml:space="preserve">
+    <data name="S4UL0001Title" xml:space="preserve">
         <value>A logging method that does not produce output even though it looks like it would. Absolute genius</value>
     </data>
-    <data name="S4U0001MessageFormat" xml:space="preserve">
+    <data name="S4UL0001MessageFormat" xml:space="preserve">
         <value>'{0}' does not produce logging output</value>
     </data>
-    <data name="S4U0001CodeFixText" xml:space="preserve">
+    <data name="S4UL0001CodeFixText" xml:space="preserve">
         <value>Replace '{0}' with '{1}'</value>
     </data>
 </root>

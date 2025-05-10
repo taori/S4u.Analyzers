@@ -36,7 +36,7 @@ public class S4UL0001_CodeFixProvider : CodeFixProvider
 
             context.RegisterCodeFix(
                 CodeAction.Create(
-                    title: Translations.S4U0001Title,
+                    title: Translations.S4UL0001Title,
                     createChangedDocument: token => PrependLog(context.Document, declaration, token),
                     equivalenceKey: $"{Rules.Usage.LogStatementIsNotLogged.Id}{declaration.Identifier.ValueText}"
                 ),

@@ -1,0 +1,45 @@
+﻿name: "get latest artifact run number"
+on:
+  workflow_call:
+    inputs:
+      
+      modify:
+        type: boolean
+        description: whether to change the version
+        required: true
+        
+      inputVersion:
+        type: string
+        description: Input version
+        required: true
+        
+      runNumber:
+        type: string
+        description: Number that replaces {bnr}
+        required: true
+        
+    outputs:
+      version: 
+        value: ${{ jobs.execute.outputs.version }}
+        description: Calculated version
+
+jobs:
+  execute:
+    outputs:
+      version: ${{ steps.exec.outputs.result }}
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: exec
+        shell: pwsh
+        id: exec
+        run: |
+  
+          if("${{ inputs.modify }}" -ne "true"){
+            return ""
+          }
+          
+          $v = "${{ inputs.inputVersion }}".Replace("{bnr}", "${{ inputs.runNumber }}")
+          
+          echo "result=$v" >> $env:GITHUB_OUTPUT

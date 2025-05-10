@@ -47,6 +47,18 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ inputs.artifactName }}
           path: ${{github.workspace}}/artifacts
+
+      - name: Update version manually
+        if: ${{ inputs.versionNumber != '' }}
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path "${{ github.workspace }}/artifacts" -Filter "*.vsix" | `
+            %{ `
+              &.\override-vsix-version.ps1 -File $_.FullName -Version "${{ inputs.versionNumber }}" -DestinationFolder "${{ github.workspace }}/artifacts-patched" ` 
+            }
+          
+          Remove-Item "${{ github.workspace }}/artifacts" -Recurse -Force
+          Move-Item -Path "${{ github.workspace }}/artifacts-patched" -Destination "${{ github.workspace }}/artifacts"
           
       - name: get artifacts vsix path
         id: vsixPath
