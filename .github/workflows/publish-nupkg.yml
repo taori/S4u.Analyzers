@@ -3,6 +3,11 @@ on:
   workflow_call:
     inputs:
       
+      removePrereleases:
+        type: boolean
+        description: remove prereleases?
+        required: true
+      
       artifactName:
         type: string
         description: Artifact name
@@ -60,14 +65,14 @@ jobs:
       - name: Release
         run: dotnet nuget push "${{ github.workspace }}/artifacts/*.nupkg" -k ${{ secrets.nupkgPublishToken }} -s https://api.nuget.org/v3/index.json
 
-#      - name: Remove old prereleases
-#        if: ${{ inputs.removePrereleases }}
-#        shell: pwsh
-#        run: |
-#          & dotnet tool install --global NugetUnlister
-#           Get-ChildItem "artifact-export/" -Filter "*.nupkg" | `
-#           %{ $_.Name } | `
-#           Select-String -Pattern "(?<packageId>.+)\.(?<version>\d{1,2}\.\d{1,2}\.\d{1,2}(?:[-\w\d.]+)?)(?=.nupkg)" | `
-#           %{ , @( $_.Matches[0].Groups["packageId"].Value, $_.Matches[0].Groups["version"].Value ) } | `
-#           % { Write-Output "nuget-unlist drop prereleasebefore $($_[0]) $($_[1]) ${{ secrets.nuget }}" `
-#             & nuget-unlist drop prereleasebefore $_[0] $_[1] ${{ secrets.nuget }} }
+      - name: Remove old prereleases
+        if: ${{ inputs.removePrereleases }}
+        shell: pwsh
+        run: |
+          & dotnet tool install --global NugetUnlister
+           Get-ChildItem "${{ github.workspace }}/artifacts" -Filter "*.nupkg" | `
+           %{ $_.Name } | `
+           Select-String -Pattern "(?<packageId>.+)\.(?<version>\d{1,2}\.\d{1,2}\.\d{1,2}(?:[-\w\d.]+)?)(?=.nupkg)" | `
+           %{ , @( $_.Matches[0].Groups["packageId"].Value, $_.Matches[0].Groups["version"].Value ) } | `
+           % { Write-Output "nuget-unlist drop prereleasebefore $($_[0]) $($_[1]) ${{ secrets.nupkgPublishToken }}" `
+             & nuget-unlist drop prereleasebefore $_[0] $_[1] ${{ secrets.nupkgPublishToken }} }

@@ -22,7 +22,19 @@ on:
         
       useManualVersioning:
         description: Use manual versioning?
-        default: true
+        default: false
+        required: true
+        type: boolean
+        
+      gitRelease:
+        description: Create GitHub release?
+        default: false
+        required: true
+        type: boolean
+        
+      removePreRelease:
+        description: Remove pre releases?
+        default: false
         required: true
         type: boolean
         
@@ -61,6 +73,7 @@ jobs:
     uses: ./.github/workflows/publish-nupkg.yml
     needs: [nupkgRunNumber, getNupkgVersion]
     with:
+      removePrereleases: ${{ inputs.removePreRelease }}
       artifactName: "Logging.nupkg"
       runNumber: ${{ needs.nupkgRunNumber.outputs.runId }}
       versionNumber: ${{ needs.getNupkgVersion.outputs.version }}
@@ -94,3 +107,10 @@ jobs:
       versionNumber: ${{ needs.getVsixVersion.outputs.version }}
     secrets:
       vsMarketAccessToken: ${{ secrets.VSMARKETACCESSTOKEN }}
+
+  gitHubRelease:
+    if: ${{ inputs.publishNupkg && needs.getNupkgVersion.outputs.version != '' }}
+    uses: ./.github/workflows/publish-github.yml
+    needs: [ nupkgRunNumber, getNupkgVersion, nupkg, vsix ]
+    with:
+      versionNumber: ${{ needs.getNupkgVersion.outputs.version }}
