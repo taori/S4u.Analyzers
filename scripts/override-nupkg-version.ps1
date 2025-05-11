@@ -21,8 +21,7 @@ function PatchNuspec([string] $folder, [string] $newVersion){
     return @($oldVersion, $newVersion)
 }
 
-$tmpPath = [System.IO.Path]::GetTempPath()
-$tempDir = Join-Path $tmpPath $(New-Guid) | %{ mkdir $_ }
+$tempDir = New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ }
 
 Write-Host "Patching $InputFile using tmp folder $tempDir" -ForegroundColor Green
 
