@@ -5,16 +5,15 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>0.2.0</VersionPrefix>
+    <VersionPrefix>0.3.3</VersionPrefix>
     <VersionSuffix>alpha</VersionSuffix>
     <PackageId>S4U.Logging.Analyzers</PackageId>
     <Authors>A</Authors>
-    <PackageLicenseUrl>https://www.github.com/taori/S4u.Analyzers/analyzers/Logging/resources/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://www.github.com/taori/S4u.Analyzers</PackageProjectUrl>
-    <PackageIconUrl>https://www.github.com/taori/S4u.Analyzers/analyzers/Logging/resources/icon.png</PackageIconUrl>
     <RepositoryUrl>https://www.github.com/taori/S4u.Analyzers.git</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Logging</Description>
@@ -26,6 +25,18 @@
 
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageIcon>Resources\icon.png</PackageIcon>
+    <PackageReadmeFile>Resources\analyzer.md</PackageReadmeFile>
+    <PackageLicenseFile>Resources\LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'True'">
+    <None Include="$(ProjectDir)\..\analyzer.md" Pack="True" PackagePath="\Resources" />
+    <None Include="$(ProjectDir)\..\resources\LICENSE" Pack="True" PackagePath="\Resources" />
+    <None Include="$(ProjectDir)\..\resources\icon.png" Pack="True" PackagePath="\Resources" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
