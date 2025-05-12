@@ -51,7 +51,7 @@ jobs:
           version-number: ''        
 
       - name: Build
-        run: msbuild "${{ inputs.csprojPath }}" /v:diag -restore /p:OutDir=\_built -t:go -fl -flp:logfile=\_logs\MyProjectOutput.log -bl:\_logs\MyProjectOutput.binlog
+        run: msbuild "${{ inputs.csprojPath }}" /v:diag -restore /p:OutDir=\_built -fl -flp:logfile=\_logs\MyProjectOutput.log -bl:\_logs\MyProjectOutput.binlog
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
